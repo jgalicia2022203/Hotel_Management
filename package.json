@@ -1,0 +1,45 @@
+{
+  "name": "kinalgo.com",
+  "version": "1.0.0",
+  "description": "A centralized web platform for hotel management, inspired by models like Trivago, offering comprehensive functionality for managing hotels, rooms, and associated events. It allows users to search for hotels, view available rooms, book stays, and access detailed information about hotel events. Administrators can manage user accounts, hotel listings, and view detailed reports and statistics to enhance operational performance.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": " node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jgalicia2022203/Node_Hotel_Management.git"
+  },
+  "keywords": [
+    "Kinalgo",
+    "nodeJS",
+    "backend"
+  ],
+  "author": "Juan Galicia, Samuel Rodriguez, Angelo Palma, Josue Ambrocio, Brandon Gomez",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-joi-validation": "^5.0.1",
+    "express-rate-limit": "^7.2.0",
+    "express-validator": "^7.0.1",
+    "helmet": "^7.1.0",
+    "joi": "^17.12.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.5.0",
+    "mongoose": "^8.3.2",
+    "morgan": "^1.10.0",
+    "socket.io": "^4.7.5",
+    "uuid": "^9.0.1",
+    "vercel": "^34.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "type": "module"
+}
