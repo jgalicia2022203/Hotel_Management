@@ -13,12 +13,12 @@ Hey devs its your scrum here! i will be deploying util information and docs for 
 
 `feature/hotel_management`
 
-- **Purpose**: Develop the features necessary for creating, updating, and displaying events hosted by the hotels.
+- **Purpose**: Implement and refine the functionality related to managing hotel data within the system.
 - **Scope of Work**: Creating hotel profiles, updating hotel information, managing hotel amenities, and handling room details. This may include database operations, API endpoints, and integration with the front-end for displaying hotel information.
 
 `feature/event_management`
 
-- **Purpose**: Implement and refine the functionality related to managing hotel data within the system.
+- **Purpose**: Develop the features necessary for creating, updating, and displaying events hosted by the hotels.
 - **Scope of Work**: Event creation forms, event editing capabilities, displaying upcoming events, and linking events with hotels and users. Includes server-side logic for event time scheduling and conflict avoidance.
 
 `feature/service_management`
