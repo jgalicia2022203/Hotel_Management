@@ -1,21 +1,38 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken'
+import User from '../../users/user.model.js'
 
-export const validateJWT = (req, res, next) => {
-  let token = req.body.token || req.query.token || req.headers["authorization"];
+export const validarJWT = async (req, res, next) =>{
+    const token = req.header("x-token");
 
-  if (!token) {
-    return res.status(401).send("A token is required for authentication");
-  }
+    if(!token){
+        return res.status(401).json({
+            msg: "No token in the request",
+        });
+    }
 
-  try {
-    token = token.replace(/^Bearer\s+/, "");
-    const decoded = jwt.verify(token, process.env.TOKEN_KEY);
+    try{
+        const {uid} = jwt.verify(token, process.env.TOKEN_KEY);
+        const usuario = await User.findById(uid);
+        
+        if(!usuario){
+            return res.status(401).json({
+                msg: 'User not exist in the DB'
+            })
+        }
+        
+        if(!usuario.status){
+            return res.status(401).json({
+                msg: "invalid token - user with status:false"
+            })
+        }
 
-    req.user = decoded;
-  } catch (e) {
-    console.log(e);
-    return res.status(401).send("Invalid Token");
-  }
+        req.usuario = usuario;
 
-  return next();
-};
+        next();
+    }catch(e){
+        console.log(e),
+        res.status(401).json({
+            msg:"Token not valid"
+        })
+    }
+}

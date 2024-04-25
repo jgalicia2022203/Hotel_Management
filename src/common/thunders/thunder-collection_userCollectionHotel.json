@@ -1,0 +1,81 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "userCollectionHotel",
+    "collectionId": "552715ee-b27f-45a7-82e6-0d803b750e76",
+    "dateExported": "2024-04-25T05:56:48.142Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "25498168-5711-4a85-848c-94d2f6f4e57b",
+            "colId": "552715ee-b27f-45a7-82e6-0d803b750e76",
+            "containerId": "",
+            "name": "userPost",
+            "url": "http://localhost:8080/kinalgo/v1/users",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-04-25T05:22:48.972Z",
+            "modified": "2024-04-25T05:27:50.818Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\":\"Test1\", \n  \"email\":\"test1@gmail.com\",\n  \"password\":\"123456\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "6dbd3e2c-8368-44e0-9044-2b551072a678",
+            "colId": "552715ee-b27f-45a7-82e6-0d803b750e76",
+            "containerId": "",
+            "name": "userGet",
+            "url": "http://localhost:8080/kinalgo/v1/users?desde=0&limite=20",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2024-04-25T05:47:31.587Z",
+            "modified": "2024-04-25T05:53:11.482Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "desde",
+                    "value": "0",
+                    "isPath": false
+                },
+                {
+                    "name": "limite",
+                    "value": "20",
+                    "isPath": false
+                }
+            ]
+        },
+        {
+            "_id": "33e669a4-54f1-4207-9604-7ff9b5039214",
+            "colId": "552715ee-b27f-45a7-82e6-0d803b750e76",
+            "containerId": "",
+            "name": "userUpdate",
+            "url": "http://localhost:8080/kinalgo/v1/users/6629ed5f14ee6b7e45ade6fd",
+            "method": "PUT",
+            "sortNum": 50000,
+            "created": "2024-04-25T05:53:24.955Z",
+            "modified": "2024-04-25T05:54:20.831Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\":\"Test0\", \n  \"email\":\"test0@gmail.com\",\n  \"password\":\"123456\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "ad5532d1-3e7b-4089-b56e-90c0aee44024",
+            "colId": "552715ee-b27f-45a7-82e6-0d803b750e76",
+            "containerId": "",
+            "name": "userDelete",
+            "url": "http://localhost:8080/kinalgo/v1/users/6629ed5f14ee6b7e45ade6fd",
+            "method": "DELETE",
+            "sortNum": 60000,
+            "created": "2024-04-25T05:55:29.646Z",
+            "modified": "2024-04-25T05:55:40.933Z",
+            "headers": []
+        }
+    ],
+    "ref": "KRwdvgUxwqe0GQj6knWM_y4R68le47SqZw8xCEEYeoYQbUIAcdsRSQadJSJhBoHnPJ6MKq-tj39LYE8N6C4a-Q"
+}
