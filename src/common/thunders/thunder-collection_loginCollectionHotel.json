@@ -1,0 +1,28 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "loginCollectionHotel",
+    "collectionId": "c3fa1349-828a-43d5-a3c6-55e67b094e73",
+    "dateExported": "2024-04-25T06:42:08.392Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "0d469156-b3ce-420d-9e74-fec55ed6b637",
+            "colId": "c3fa1349-828a-43d5-a3c6-55e67b094e73",
+            "containerId": "",
+            "name": "loginPost",
+            "url": "http://localhost:8080/kinalgo/v1/auth/login",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-04-25T06:16:14.144Z",
+            "modified": "2024-04-25T06:42:00.199Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"hotel@gmail.com\",\n  \"password\":\"123456\"\n}",
+                "form": []
+            }
+        }
+    ],
+    "ref": "Um2c7Rc7Ly6gCjr7ZQA_u8NE8yDsNUWwbRzOCHeIF2YhEL4kjwZuRVkQvSQ5vpHUw0dWm4rUvh3b4AHZlRvrzA"
+}

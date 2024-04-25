@@ -18,7 +18,7 @@ const UserSchema = mongoose.Schema({
         type: String,
         require: true,
         enum: ["ADMIN_HOTEL", "VISIT_ROLE"],
-        default: "ADMIN_HOTEL"
+        default: "VISIT_ROLE"
     },
     status:{
         type: Boolean,

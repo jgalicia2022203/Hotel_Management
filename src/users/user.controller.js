@@ -55,7 +55,7 @@ export const usuarioPut = async (req, res = response) =>{
 export const usuarioDelete = async(req, res) =>{
     const {id} = req.params
 
-    const usuario = await User.findByAndUpdate(id, {status: false})
+    const usuario = await User.findByIdAndUpdate(id, {status: false})
     const usuarioAutenticacdo = req.usuario;
 
     res.status(200).json({msg: 'Usuario eliminado!', usuario, usuarioAutenticacdo})
