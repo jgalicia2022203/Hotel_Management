@@ -1,0 +1,162 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Kinalgo",
+    "collectionId": "dd7541f3-9884-4b26-891c-7e98038e379b",
+    "dateExported": "2024-04-30T16:46:23.062Z",
+    "version": "1.2",
+    "folders": [
+        {
+            "_id": "03706139-37b3-4a0f-9bbc-926b35cb663a",
+            "name": "USERS",
+            "containerId": "",
+            "created": "2024-04-27T22:12:30.370Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "8c7787c3-9302-4fe0-8ac5-97d672437343",
+            "name": "ADMINS",
+            "containerId": "03706139-37b3-4a0f-9bbc-926b35cb663a",
+            "created": "2024-04-28T13:07:43.777Z",
+            "sortNum": 30000
+        },
+        {
+            "_id": "9946fea2-02ac-4194-a172-9c6584119ba3",
+            "name": "CLIENTS",
+            "containerId": "03706139-37b3-4a0f-9bbc-926b35cb663a",
+            "created": "2024-04-28T13:08:03.071Z",
+            "sortNum": 40000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "6fdfb41d-bfa7-403c-a8a2-fc29864bdc0c",
+            "colId": "dd7541f3-9884-4b26-891c-7e98038e379b",
+            "containerId": "8c7787c3-9302-4fe0-8ac5-97d672437343",
+            "name": "LIST USERS",
+            "url": "http://localhost:8080/kinalgo/v1/users/",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-04-27T22:12:52.106Z",
+            "modified": "2024-04-29T21:38:32.511Z",
+            "headers": [
+                {
+                    "name": "x-token",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NjMwMTJkZWI0MzYxOTc3MDgxMzMwNzIiLCJpYXQiOjE3MTQ0MjY3MDQsImV4cCI6MTcxNDQ1NTUwNH0.x-VSLI8FIfcKkHjryGBBWeFWcbIdFD2blOxmcilQkP8"
+                }
+            ]
+        },
+        {
+            "_id": "3b73e0c5-d378-4371-a0c9-281afcbfbc40",
+            "colId": "dd7541f3-9884-4b26-891c-7e98038e379b",
+            "containerId": "9946fea2-02ac-4194-a172-9c6584119ba3",
+            "name": "EDIT MY INFO",
+            "url": "http://localhost:8080/kinalgo/v1/users/profile-settings/66301311b43619770813307c",
+            "method": "PUT",
+            "sortNum": 10000,
+            "created": "2024-04-27T22:14:36.139Z",
+            "modified": "2024-04-30T02:55:27.260Z",
+            "headers": [
+                {
+                    "name": "x-token",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NjMwMTMxMWI0MzYxOTc3MDgxMzMwN2MiLCJpYXQiOjE3MTQ0MjY2NTYsImV4cCI6MTcxNDQ1NTQ1Nn0.vpVC3to3dRXWBp_v5GPU1l6oTmvJEKpZ37rwuNYnvhM"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"juan\",\n  \"username\": \"tonelito\",\n  \"email\": \"jgaliciamazariegos@outlook.es\",\n  \"password\": \"123456\", \n  \"phoneNumber\": \"56520138\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "2efc5ec7-b171-4feb-8e66-91872a2d0d8f",
+            "colId": "dd7541f3-9884-4b26-891c-7e98038e379b",
+            "containerId": "8c7787c3-9302-4fe0-8ac5-97d672437343",
+            "name": "EDIT USER INFO",
+            "url": "http://localhost:8080/kinalgo/v1/users/66301311b43619770813307c",
+            "method": "PUT",
+            "sortNum": 15000,
+            "created": "2024-04-28T13:42:58.523Z",
+            "modified": "2024-04-29T21:48:34.922Z",
+            "headers": [
+                {
+                    "name": "x-token",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NjMwMTJkZWI0MzYxOTc3MDgxMzMwNzIiLCJpYXQiOjE3MTQ0MjY3MDQsImV4cCI6MTcxNDQ1NTUwNH0.x-VSLI8FIfcKkHjryGBBWeFWcbIdFD2blOxmcilQkP8"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"juan luis\",\n  \"username\": \"tone\",\n  \"email\": \"jgalicia@outlook.es\",\n  \"password\": \"12345\", \n  \"role\": \"ADMIN\",\n  \"phoneNumber\": \"56520138\",\n  \"status\": false,\n  \"created_at\": \"2024-04-29T12:00:00Z\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "8add2883-0a19-4d18-9880-104b7df50b22",
+            "colId": "dd7541f3-9884-4b26-891c-7e98038e379b",
+            "containerId": "03706139-37b3-4a0f-9bbc-926b35cb663a",
+            "name": "REGISTER",
+            "url": "http://localhost:8080/kinalgo/v1/users/register",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-04-27T22:13:35.935Z",
+            "modified": "2024-04-28T12:34:58.798Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"juan galicia\",\n  \"username\":\"tone\",\n  \"email\": \"jgalicia@outlook.es\",\n  \"password\": \"123456\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "51b8528c-d628-4205-bc49-1929ff57723d",
+            "colId": "dd7541f3-9884-4b26-891c-7e98038e379b",
+            "containerId": "8c7787c3-9302-4fe0-8ac5-97d672437343",
+            "name": "DELETE USER",
+            "url": "http://localhost:8080/kinalgo/v1/users/66301311b43619770813307c",
+            "method": "PATCH",
+            "sortNum": 20000,
+            "created": "2024-04-27T22:14:43.321Z",
+            "modified": "2024-04-29T21:56:26.544Z",
+            "headers": [
+                {
+                    "name": "x-token",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NjMwMTJkZWI0MzYxOTc3MDgxMzMwNzIiLCJpYXQiOjE3MTQ0Mjc3NzQsImV4cCI6MTcxNDQ1NjU3NH0.F_4w5TPO4gafWNXy6fLM2fXvka0SxXbqD-X9ES8jwnU"
+                }
+            ]
+        },
+        {
+            "_id": "b84c0201-7dec-4f62-aea4-9535e142f7d5",
+            "colId": "dd7541f3-9884-4b26-891c-7e98038e379b",
+            "containerId": "9946fea2-02ac-4194-a172-9c6584119ba3",
+            "name": "DELETE MY ACCOUNT",
+            "url": "http://localhost:8080/kinalgo/v1/users/profile-settings/66301311b43619770813307c",
+            "method": "PATCH",
+            "sortNum": 20000,
+            "created": "2024-04-28T13:39:45.570Z",
+            "modified": "2024-04-29T22:05:53.675Z",
+            "headers": [
+                {
+                    "name": "x-token",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NjMwMTMxMWI0MzYxOTc3MDgxMzMwN2MiLCJpYXQiOjE3MTQ0MjgyODksImV4cCI6MTcxNDQ1NzA4OX0.F6D2FfYxGTFy5uocqxKu3Gz_Ruw7jDKtW8SaND0EpoU"
+                }
+            ]
+        },
+        {
+            "_id": "6c6c988c-36a0-4bdd-904c-9181840d84a8",
+            "colId": "dd7541f3-9884-4b26-891c-7e98038e379b",
+            "containerId": "03706139-37b3-4a0f-9bbc-926b35cb663a",
+            "name": "LOGIN",
+            "url": "http://localhost:8080/kinalgo/v1/auth/login",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-04-27T22:13:44.466Z",
+            "modified": "2024-04-29T22:04:50.006Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"jgalicia@outlook.es\",\n  \"password\": \"123456\"\n}",
+                "form": []
+            }
+        }
+    ],
+    "ref": "1CPVT9fozF3oAquS-ryXv0rX0HthNx-4LJQIvoHoyHLOqcpGZBgMoMFBygQQh27uiOR6cg4fz2VpgtjjXSSadw"
+}

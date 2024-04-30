@@ -1,42 +1,40 @@
-import bcryptjs from 'bcryptjs'
-import User from '../users/user.model.js'
-import {generateJWT} from '../common/helpers/generate-jwt.js'
-
+import bcryptjs from "bcryptjs";
+import { generateJWT } from "../common/helpers/generate-jwt.js";
+import User from "../users/user.model.js";
 
 export const auth = async (req, res) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const usuario = await User.findOne({ email });
+    const user = await User.findOne({ email });
 
-    if (!usuario) {
+    if (!user) {
       return res.status(400).json({
         msg: "Incorrect credentials, email does not exist in the database",
       });
     }
-    if (!usuario.status) {
+    if (!user.status) {
       return res.status(400).json({
         msg: "The user does not exist in the database",
       });
     }
-    const validPassword = bcryptjs.compareSync(password, usuario.password);
+    const validPassword = bcryptjs.compareSync(password, user.password);
     if (!validPassword) {
       return res.status(400).json({
         msg: "The password is incorrect",
       });
     }
-    const token = await generateJWT( usuario.id);
+    const token = await generateJWT(user.id);
 
     res.status(200).json({
-      msg: 'Login Ok!!!',
-      usuario,
-      token
+      msg: "Welcome!",
+      user,
+      token,
     });
-
   } catch (e) {
     console.log(e);
     res.status(500).json({
       msg: "Contact the administrator",
     });
   }
-}
+};

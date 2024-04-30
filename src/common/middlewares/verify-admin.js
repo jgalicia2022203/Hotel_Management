@@ -1,19 +1,9 @@
-export const isAdmin = (req, res, next) =>{
-    const user = req.usuario;
+export const isAdmin = (req, res, next) => {
+  if (req.user.role === "ADMIN" || req.user.role === "ADMIN_HOTEL") {
+    return next();
+  }
 
-    if(user.role == 'ADMIN_HOTEL') return next()
-
-    return res.status(400).json({
-        msg: "You not have acces, only admin"
-    })
-}
-
-export const isClient = (req, res, next) =>{
-    const user = req.usuario
-
-    if(user.role == "VISIT_ROLE") return next()
-
-    return res.status(400).json({
-        msg: "You not have access, only clients"
-    })
-}
+  return res.status(401).json({
+    msg: "This action requires admin privileges",
+  });
+};

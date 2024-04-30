@@ -4,7 +4,6 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
-import bcryptjs from 'bcryptjs'
 import amenitiesRoutes from "../src/amenities/amenity.routes.js";
 import authRoutes from "../src/auth/auth.routes.js";
 import apiLimiter from "../src/common/middlewares/validate-amount-petitions.js";
@@ -13,9 +12,9 @@ import hotelRoutes from "../src/hotels/hotel.routes.js";
 import invoiceRoutes from "../src/invoices/invoice.routes.js";
 import roomRoutes from "../src/rooms/room.routes.js";
 import serviceRoutes from "../src/services/service.routes.js";
+import User from "../src/users/user.model.js";
 import userRoutes from "../src/users/user.routes.js";
 import { dbConnection } from "./mongo.js";
-import User from '../src/users/user.model.js';
 
 class Server {
   constructor() {
@@ -38,17 +37,17 @@ class Server {
     await dbConnection();
 
     const lengthUsers = await User.countDocuments();
-        if(lengthUsers > 0) return;
+    if (lengthUsers > 0) return;
 
-        const salt = bcryptjs.genSaltSync();
-        const password = bcryptjs.hashSync('123456', salt);
+    const adminUser = new User({
+      name: "Admin",
+      username: "Admin",
+      email: "admin@outlook.es",
+      password: "123456",
+      role: "ADMIN",
+    });
 
-        const adminUser = new User(
-            {name: "Hotel Administrador", email: "hotel@gmail.com", password, role: "ADMIN_HOTEL"}
-        )
-
-        adminUser.save();
-
+    adminUser.save();
   }
 
   middlewares() {

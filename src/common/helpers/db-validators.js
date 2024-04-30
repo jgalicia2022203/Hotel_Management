@@ -1,15 +1,22 @@
-import User from '../../users/user.model.js'
+import User from "../../users/user.model.js";
 
-export const existeEmail = async (email = '') =>{
-    const existeEmail = await User.findOne({email})
-    if(existeEmail){
-        throw new Error(`The Email ${email} has already been registred`)
-    }
-}
+export const emailExists = async (email = "") => {
+  const emailExists = await User.findOne({ email });
+  if (emailExists) {
+    throw new Error(`The Email ${email} has already been registered`);
+  }
+};
 
-export const existeUsuarioById = async (id = '') =>{
-    const existeUsuario = await User.findById(id)
-    if(!existeUsuario){
-        throw new Error(`The id: ${email} does not exist`)
-    }
-}
+export const userExistsById = async (id = "") => {
+  const userExists = await User.findById(id);
+  if (!userExists) {
+    throw new Error(`The id: ${id} does not exist in the database`);
+  }
+};
+
+export const usernameExists = async (username = "") => {
+  const usernameExists = await User.findOne({ username });
+  if (usernameExists) {
+    throw new Error(`the username ${username} is already registered`);
+  }
+};
