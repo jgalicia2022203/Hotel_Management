@@ -1,0 +1,69 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Amenites",
+    "collectionId": "cbabcba0-29a2-47c9-a7a3-047182eb12fe",
+    "dateExported": "2024-04-30T15:08:34.958Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "1e1759f7-b84e-4f8a-b304-be6464970c8b",
+            "colId": "cbabcba0-29a2-47c9-a7a3-047182eb12fe",
+            "containerId": "",
+            "name": "Add Amenity",
+            "url": "http://localhost:8080/kinalgo/v1/amenities",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-04-30T12:17:57.368Z",
+            "modified": "2024-04-30T13:01:22.595Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n  \"description\": \"Descripción \"\r\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "ddd5bea5-45b4-47ab-971e-e8f59a58b3ad",
+            "colId": "cbabcba0-29a2-47c9-a7a3-047182eb12fe",
+            "containerId": "",
+            "name": "Buscar Amenity",
+            "url": "http://localhost:8080/kinalgo/v1/amenities",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2024-04-30T13:00:50.375Z",
+            "modified": "2024-04-30T13:01:04.330Z",
+            "headers": []
+        },
+        {
+            "_id": "5ec50e05-3a47-4650-843f-219abdaeb6b2",
+            "colId": "cbabcba0-29a2-47c9-a7a3-047182eb12fe",
+            "containerId": "",
+            "name": "Edita Amenity",
+            "url": "http://localhost:8080/kinalgo/v1/amenities/6630e6f192f746cd35a25207",
+            "method": "PUT",
+            "sortNum": 30000,
+            "created": "2024-04-30T13:01:45.381Z",
+            "modified": "2024-04-30T13:03:19.694Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n  \"description\": \"servicio new manage \"\r\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "b6ac0eff-b6e9-4df0-9b83-94ab7f0fe20f",
+            "colId": "cbabcba0-29a2-47c9-a7a3-047182eb12fe",
+            "containerId": "",
+            "name": "Delete Amenity",
+            "url": "http://localhost:8080/kinalgo/v1/amenities/6630e26c92f746cd35a25205",
+            "method": "DELETE",
+            "sortNum": 40000,
+            "created": "2024-04-30T13:03:32.340Z",
+            "modified": "2024-04-30T13:04:11.762Z",
+            "headers": []
+        }
+    ],
+    "ref": "v0mVT7etZNJwJL-IqXT01g8OiR9kpqoGCRXDKeo7JMX9VBSCFK5jQRPhP7PlKWFUHK9IWyeAKcxFLLHWekEkfQ"
+}
