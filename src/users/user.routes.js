@@ -49,8 +49,8 @@ router.put(
     check("username").custom(usernameExists),
     check("email").custom(emailExists),
     check("password", "The password must be at least 6 characters")
-    .isLength({ min: 6 })
-    .optional(),
+      .isLength({ min: 6 })
+      .optional(),
     validRole,
     validateFields,
   ],
@@ -69,8 +69,8 @@ router.put(
     check("username").custom(usernameExists),
     check("email").custom(emailExists),
     check("password", "The password must be at least 6 characters")
-    .isLength({ min: 6 })
-    .optional(),
+      .isLength({ min: 6 })
+      .optional(),
     validateFields,
   ],
   restrictStatusChange,

@@ -1,3 +1,4 @@
+import Amenity from "../../amenities/amenity.model.js";
 import User from "../../users/user.model.js";
 
 export const userExistsById = async (id = "") => {
@@ -18,5 +19,12 @@ export const emailExists = async (email = "", { req }) => {
   const existingUser = await User.findOne({ email });
   if (existingUser && existingUser._id.toString() !== req.params.id) {
     throw new Error(`The email ${email} has already been registered`);
+  }
+};
+
+export const amenityExists = async (description = "") => {
+  const amenityExists = await Amenity.findOne({ description });
+  if (amenityExists) {
+    throw new Error(`The amenity: ${description} already exists in database`);
   }
 };

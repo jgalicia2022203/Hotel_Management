@@ -2,16 +2,16 @@ import jwt from "jsonwebtoken";
 import User from "../../users/user.model.js";
 
 export const validateJWT = async (req, res, next) => {
-  const token = req.header("x-token");
+  let token = req.body.token || req.query.token || req.headers["x-token"];
 
   if (!token) {
-    return res.status(401).json({
-      msg: "No token in the request",
-    });
+    return res.status(401).send("A token is required for authentication");
   }
 
   try {
+    token = token.replace(/^Bearer\s+/, "");
     const { uid } = jwt.verify(token, process.env.TOKEN_KEY);
+
     const user = await User.findById(uid);
 
     if (!user) {
@@ -28,11 +28,9 @@ export const validateJWT = async (req, res, next) => {
 
     req.user = user;
 
-    next();
+    return next();
   } catch (e) {
-    console.log(e),
-      res.status(401).json({
-        msg: "Token not valid",
-      });
+    console.log(e);
+    return res.status(401).send("Invalid Token");
   }
 };
