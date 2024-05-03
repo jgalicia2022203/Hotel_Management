@@ -12,8 +12,8 @@ import hotelRoutes from "../src/hotels/hotel.routes.js";
 import invoiceRoutes from "../src/invoices/invoice.routes.js";
 import roomRoutes from "../src/rooms/room.routes.js";
 import serviceRoutes from "../src/services/service.routes.js";
-import User from "../src/users/user.model.js";
 import userRoutes from "../src/users/user.routes.js";
+import { DBData } from "./db-data.js";
 import { dbConnection } from "./mongo.js";
 
 class Server {
@@ -35,19 +35,7 @@ class Server {
 
   async connectDB() {
     await dbConnection();
-
-    const lengthUsers = await User.countDocuments();
-    if (lengthUsers > 0) return;
-
-    const adminUser = new User({
-      name: "Admin",
-      username: "Admin",
-      email: "admin@outlook.es",
-      password: "123456",
-      role: "ADMIN",
-    });
-
-    adminUser.save();
+    DBData();
   }
 
   middlewares() {
