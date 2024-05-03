@@ -1,10 +1,15 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const AmenitySchema = mongoose.Schema({
-    description: {
-        type: String,
-        required: [true, "The description is required"]
-    }
+  description: {
+    type: String,
+    required: [true, "The description is required"],
+  },
 });
 
-export default mongoose.model('Amenity', AmenitySchema);
+AmenitySchema.methods.toJSON = function () {
+  const amenity = this.toObject();
+  return amenity;
+};
+
+export default mongoose.model("Amenity", AmenitySchema);
