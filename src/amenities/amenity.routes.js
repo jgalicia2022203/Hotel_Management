@@ -25,6 +25,7 @@ router.post(
       "description",
       "the description must have at least 5 characters"
     ).isLength({ min: 5 }),
+    check("description").custom(amenityExists),
     validateFields,
   ],
   createAmenity

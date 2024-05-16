@@ -1,89 +1,78 @@
-import Room from './room.model.js';
+import { request, response } from "express";
+import Room from "./room.model.js";
 
-export const crearHabitacion = async (req, res) => {
-    try {
-        const { room_number, type, capacity, price_per_night, hotel_id, availability } = req.body;
-        const nuevaHabitacion = new Room({
-            room_number,
-            type,
-            capacity,
-            price_per_night,
-            hotel_id,
-            availability
-        });
+export const listRooms = async (req = request, res = response) => {
+  try {
+    const { limit, from } = req.query;
+    const query = { status: true };
 
-        const habitacionGuardada = await nuevaHabitacion.save();
-        res.status(201).json(habitacionGuardada);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al crear la habitación' });
-    }
+    const [total, rooms] = await Promise.all([
+      Room.countDocuments(query),
+      Room.find(query).skip(Number(from)).limit(Number(limit)),
+    ]);
+    res.status(200).json({ total, rooms });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({
+      msg: "An unexpected error ocurred during rooms list",
+    });
+  }
 };
 
-export const obtenerTodasLasHabitaciones = async (req, res) => {
-    try {
-        const habitaciones = await Room.find();
-        res.json(habitaciones);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al obtener las habitaciones' });
-    }
+export const createRoom = async (req, res = response) => {
+  try {
+    const { room_number, type, capacity, price_per_night } = req.body;
+    const room = new Room({
+      room_number,
+      type,
+      capacity,
+      price_per_night,
+    });
+    await Room.save();
+    res.status(201).json({
+      msg: "Room created successfully",
+      room,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      msg: "An unexpected error ocurred during Room creation",
+      error: error.message,
+    });
+  }
 };
 
-export const obtenerHabitacionPorId = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const habitacion = await Room.findById(id);
-        if (!habitacion) {
-            return res.status(404).json({ error: 'Habitación no encontrada' });
-        }
-        res.json(habitacion);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al obtener la habitación' });
-    }
+export const editRoom = async (req, res) => {
+  const id = req.params.id;
+  const { ...rest } = req.body;
+
+  try {
+    const updateRoom = await Room.findByIdAndUpdate(id, rest, { new: true });
+    res.status(200).json({
+      msg: "Room successfully updated!",
+      room: updateRoom,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Error updating the room." });
+  }
 };
 
-export const actualizarHabitacion = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { room_number, type, capacity, price_per_night, hotel_id, availability } = req.body;
+export const deactivateRoom = async (req, res) => {
+  const id = req.params.id;
 
-        const habitacionActualizada = await Room.findByIdAndUpdate(id, {
-            room_number,
-            type,
-            capacity,
-            price_per_night,
-            hotel_id,
-            availability
-        }, { new: true });
-
-        if (!habitacionActualizada) {
-            return res.status(404).json({ error: 'Habitación no encontrada' });
-        }
-        res.json(habitacionActualizada);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al actualizar la habitación' });
-    }
-};
-
-export const eliminarHabitacion = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        // Verificar el rol del usuario
-        if (req.usuario.role !== 'ADMIN') {
-            return res.status(403).json({ error: 'No tiene permisos para eliminar habitaciones' });
-        }
-
-        const habitacionEliminada = await Room.findByIdAndDelete(id);
-        if (!habitacionEliminada) {
-            return res.status(404).json({ error: 'Habitación no encontrada' });
-        }
-        res.json({ mensaje: 'Habitación eliminada correctamente' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al eliminar la habitación' });
-    }
+  try {
+    const updatedRoom = await Room.findByIdAndUpdate(
+      id,
+      { status: false },
+      { new: true }
+    );
+    res.json({
+      msg: "Room deactivated successfully.",
+      room: { id: updatedRoom._id, status: updatedRoom.status },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Error deactivating the Hotel." });
+  }
 };

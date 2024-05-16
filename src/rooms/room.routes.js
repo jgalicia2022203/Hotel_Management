@@ -1,19 +1,32 @@
-import { Router } from 'express';
+import { Router } from "express";
+import { validateFields } from "../common/middlewares/validate-fields.js";
+import { validateJWT } from "../common/middlewares/validate-jwt.js";
+import { isAdmin } from "../common/middlewares/verify-admin.js";
 import {
-    crearHabitacion,
-    obtenerTodasLasHabitaciones,
-    obtenerHabitacionPorId,
-    actualizarHabitacion,
-    eliminarHabitacion
-} from './room.controller.js';
-import { validarJWT } from "../common/middlewares/validate-jwt.js";
+  createRoom,
+  deactivateRoom,
+  editRoom,
+  listRooms,
+} from "./room.controller.js";
 
 const router = Router();
-
-router.post('/', validarJWT, crearHabitacion); // Crear una nueva habitación
-router.get('/', obtenerTodasLasHabitaciones); // Obtener todas las habitaciones
-router.get('/:id', obtenerHabitacionPorId); // Obtener una habitación por su ID
-router.put('/:id', validarJWT, actualizarHabitacion); // Actualizar una habitación por su ID
-router.delete('/:id', validarJWT, eliminarHabitacion); // Eliminar una habitación por su ID
+router.get("/", validateJWT, isAdmin, listRooms);
+router.post(
+  "/",
+  validateJWT,
+  isAdmin,
+  [
+    check("room_number", "the room number can't be empty").not().isEmpty(),
+    check("type", "the type cannot be empty").not().isEmpty(),
+    check("capacity", "the capacity cannot be empty").not().isEmpty(),
+    check("price_per_night", "the price per night cannot be empty")
+      .not()
+      .isEmpty(),
+    validateFields,
+  ],
+  createRoom
+);
+router.put("/:id", validateJWT, isAdmin, editRoom);
+router.patch("/:id", validateJWT, isAdmin, deactivateRoom);
 
 export default router;

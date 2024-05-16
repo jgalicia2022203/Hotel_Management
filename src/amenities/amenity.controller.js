@@ -6,11 +6,11 @@ export const listAmenities = async (req = request, res = response) => {
     const { limit, from } = req.query;
     const query = { status: true };
 
-    const [total, users] = await Promise.all([
+    const [total, amenities] = await Promise.all([
       Amenity.countDocuments(query),
       Amenity.find(query).skip(Number(from)).limit(Number(limit)),
     ]);
-    res.status(200).json({ total, users });
+    res.status(200).json({ total, amenities });
   } catch (e) {
     console.error(e);
     res.status(500).json({

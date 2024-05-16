@@ -1,32 +1,45 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const HotelSchema = mongoose.Schema({
-    name: {
-        type: String,
-        required: [true, "The name is required"],
-        unique: true
-    },
-    address: {
-        type: String,
-        required: [true, "The address is required"]
-    },
-    category: {
-        type: String,
-        required: [true, "The category is required"],
-        default: 'several' 
-    },
-    description: {
-        type: String,
-        required: [true, "The description is required"]
-    },
-    amenities: {
-        type: Number,
-        required: [true, "The amenities are required"]
-    },
-    status: {
-        type: String,
-        required: [true, "The status is required"]
-    }
+  name: {
+    type: String,
+    required: [true, "The name is required"],
+    unique: true,
+  },
+  description: {
+    type: String,
+    required: [true, "The description is required"],
+  },
+  address: {
+    type: String,
+    required: [true, "The address is required"],
+  },
+  category: {
+    type: String,
+    required: [true, "The category is required"],
+    default: "several",
+  },
+  amenities: {
+    type: Schema.Types.ObjectId,
+    ref: "Amenity",
+  },
+  rooms: {
+    type: Schema.Types.ObjectId,
+    ref: "Room",
+  },
+  events: {
+    type: Schema.Types.ObjectId,
+    ref: "Event",
+  },
+  status: {
+    type: Boolean,
+    default: true,
+  },
 });
 
-export default mongoose.model('Hotel', HotelSchema);
+HotelSchema.methods.toJSON = function () {
+  const hotel = this.toObject();
+  return hotel;
+};
+
+export default mongoose.model("Hotel", HotelSchema);
