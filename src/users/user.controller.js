@@ -5,11 +5,10 @@ import User from "../users/user.model.js";
 export const listUsers = async (req = request, res = response) => {
   try {
     const { limit, from } = req.query;
-    const query = { status: true };
 
     const [total, users] = await Promise.all([
-      User.countDocuments(query),
-      User.find(query).skip(Number(from)).limit(Number(limit)),
+      User.countDocuments(),
+      User.find().skip(Number(from)).limit(Number(limit)),
     ]);
 
     res.status(200).json({

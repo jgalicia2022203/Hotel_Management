@@ -20,11 +20,12 @@ router.post(
   validateJWT,
   isAdmin,
   [
-    check("description", "the description cannot be empty").not().isEmpty(),
-    check(
-      "description",
-      "the description must have at least 5 characters"
-    ).isLength({ min: 5 }),
+    check("description")
+      .notEmpty()
+      .withMessage("The description cannot be empty"),
+    check("description")
+      .isLength({ min: 5 })
+      .withMessage("The description must have at least 5 characters"),
     check("description").custom(amenityExists),
     validateFields,
   ],
@@ -36,11 +37,12 @@ router.put(
   validateJWT,
   isAdmin,
   [
-    check("description", "the description cannot be empty").not().isEmpty(),
-    check(
-      "description",
-      "the description must have at least 5 characters"
-    ).isLength({ min: 5 }),
+    check("description")
+      .notEmpty()
+      .withMessage("The description cannot be empty"),
+    check("description")
+      .isLength({ min: 5 })
+      .withMessage("The description must have at least 5 characters"),
     check("description").custom(amenityExists),
     validateFields,
   ],

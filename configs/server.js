@@ -6,6 +6,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import amenitiesRoutes from "../src/amenities/amenity.routes.js";
 import authRoutes from "../src/auth/auth.routes.js";
+import { errorHandler } from "../src/common/middlewares/error-handler.js";
 import apiLimiter from "../src/common/middlewares/validate-amount-petitions.js";
 import eventRoutes from "../src/events/event.routes.js";
 import hotelRoutes from "../src/hotels/hotel.routes.js";
@@ -19,6 +20,7 @@ import { dbConnection } from "./mongo.js";
 class Server {
   constructor() {
     this.app = express();
+    this.configHelmet();
     this.port = process.env.PORT;
     this.authPath = "/kinalgo/v1/auth";
     this.amenityPath = "/kinalgo/v1/amenities";
@@ -31,6 +33,26 @@ class Server {
     this.middlewares();
     this.connectDB();
     this.routes();
+  }
+
+  configHelmet() {
+    this.app.use(
+      helmet({
+        contentSecurityPolicy: {
+          directives: {
+            defaultSrc: ["'self'"], // Solo permite fuentes de scripts y otros recursos desde el mismo origen
+            scriptSrc: ["'self'", "https://trusted.cdn.com"], // Permite scripts de CDNs confiables
+            styleSrc: ["'self'", "https://trusted.cdn.com"], // Permite estilos de CDNs confiables
+            imgSrc: ["'self'", "data:", "https://trusted.images.com"], // Permite imágenes del mismo origen y URLs de datos
+            connectSrc: ["'self'", "https://api.misitio.com"], // Controla las URL a las que se puede conectar mediante XHR, WebSockets
+          },
+        },
+        frameguard: { action: "deny" }, // Previene clickjacking prohibiendo que el sitio sea puesto en un iframe
+        dnsPrefetchControl: { allow: false }, // Controla el DNS prefetching, que puede mejorar la privacidad y la seguridad
+        expectCt: { enforce: true, maxAge: 86400 }, // Enforce Certificate Transparency
+        referrerPolicy: { policy: "no-referrer" }, // No enviar HTTP Referrer header
+      })
+    );
   }
 
   async connectDB() {
@@ -56,6 +78,7 @@ class Server {
     this.app.use(this.roomPath, roomRoutes);
     this.app.use(this.servicePath, serviceRoutes);
     this.app.use(this.userPath, userRoutes);
+    this.app.use(errorHandler);
   }
 
   listen() {

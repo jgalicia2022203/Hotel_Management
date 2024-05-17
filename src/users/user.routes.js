@@ -28,14 +28,23 @@ router.get("/", validateJWT, isAdmin, listUsers);
 router.post(
   "/register",
   [
-    check("username", "The name is obligatory").not().isEmpty(),
-    check("username").custom(usernameExists),
-    check("email", "The email is obligatory").isEmail(),
-    check("email").custom(emailExists),
-    check("password", "The password is obligatory").not().isEmpty(),
-    check("password", "The password must be at least 6 characters").isLength({
-      min: 6,
-    }),
+    check("name").notEmpty().withMessage("The name cannot be empty"),
+    check("username")
+      .notEmpty()
+      .withMessage("The username cannot be empty")
+      .custom(usernameExists),
+    check("email")
+      .notEmpty()
+      .withMessage("The email cannot be empty")
+      .isEmail()
+      .withMessage("The email is invalid")
+      .custom(emailExists),
+    check("password")
+      .notEmpty()
+      .withMessage("The password is obligatory")
+      .isLength({ min: 6 })
+      .withMessage("The password must be at least 6 characters"),
+    validRole,
     validateFields,
   ],
   register
@@ -46,8 +55,17 @@ router.put(
   validateJWT,
   isAdmin,
   [
-    check("username").custom(usernameExists),
-    check("email").custom(emailExists),
+    check("name").optional().notEmpty().withMessage("The name cannot be empty"),
+    check("username")
+      .optional()
+      .notEmpty()
+      .withMessage("The username cannot be empty")
+      .custom(usernameExists),
+    check("email")
+      .optional()
+      .notEmpty()
+      .withMessage("The email cannot be empty")
+      .custom(emailExists),
     check("password", "The password must be at least 6 characters")
       .isLength({ min: 6 })
       .optional(),
@@ -66,8 +84,16 @@ router.put(
   validateJWT,
   verifyUser,
   [
-    check("username").custom(usernameExists),
-    check("email").custom(emailExists),
+    check("username")
+      .optional()
+      .notEmpty()
+      .withMessage("The username cannot be empty")
+      .custom(usernameExists),
+    check("email")
+      .optional()
+      .notEmpty()
+      .withMessage("The email cannot be empty")
+      .custom(emailExists),
     check("password", "The password must be at least 6 characters")
       .isLength({ min: 6 })
       .optional(),
