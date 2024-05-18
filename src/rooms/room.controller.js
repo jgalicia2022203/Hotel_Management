@@ -4,7 +4,7 @@ import Room from "./room.model.js";
 export const listRooms = async (req = request, res = response) => {
   try {
     const { limit, from } = req.query;
-    const query = { status: true };
+    const query = { availability: true };
 
     const [total, rooms] = await Promise.all([
       Room.countDocuments(query),

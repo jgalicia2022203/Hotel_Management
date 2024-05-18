@@ -24,7 +24,11 @@ router.post(
     check("description")
       .notEmpty()
       .withMessage("the description cannot be empty"),
-    check("price").notEmpty().withMessage("the price is needed"),
+    check("price")
+      .notEmpty()
+      .withMessage("the price is needed")
+      .isFloat({ min: 0.01 })
+      .withMessage("the price must be greater than zero"),
     check("hotel").notEmpty().withMessage("the hotel is needed"),
     validateFields,
   ],
