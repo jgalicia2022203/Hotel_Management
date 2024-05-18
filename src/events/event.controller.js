@@ -52,7 +52,7 @@ export const editEvent = async (req, res) => {
     const updatedEvent = await Event.findByIdAndUpdate(id, rest, { new: true });
     res.status(200).json({
       msg: "Event successfully updated!",
-      hotel: updatedEvent,
+      event: updatedEvent,
     });
   } catch (e) {
     console.error(e);
@@ -65,15 +65,15 @@ export const deactivateEvent = async (req, res) => {
   try {
     const updatedEvent = await Event.findByIdAndUpdate(
       id,
-      { status: false },
+      { status: "cancelled" },
       { new: true }
     );
     res.json({
       msg: "Event deactivated successfully.",
-      hotel: { id: updatedEvent._id, status: updatedEvent.status },
+      event: { id: updatedEvent._id, status: updatedEvent.status },
     });
   } catch (e) {
     console.error(e);
-    res.status(500).json({ msg: "Error deactivating the Hotel." });
+    res.status(500).json({ msg: "Error deactivating the Event." });
   }
 };
