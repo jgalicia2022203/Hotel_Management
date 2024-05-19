@@ -1,79 +1,91 @@
-import { request } from "express";
+import { request, response } from "express";
 import Event from "./event.model.js";
 
-export const listEvents = async (req, res) => {
+// List all events with pagination
+export const listEvents = async (req = request, res = response) => {
   try {
-    const { limit, from } = req.query;
-    const events = await Event.find()
-      .populate("hotel", "name")
-      .skip(Number(from))
-      .limit(Number(limit));
-
-    res.status(200).json(events);
+    const { limit = 10, from = 0 } = req.query;
+    const [total, events] = await Promise.all([
+      Event.countDocuments(),
+      Event.find().skip(Number(from)).limit(Number(limit)),
+    ]);
+    res.status(200).json({ total, events });
   } catch (e) {
     console.error(e);
-    res.status(500).json({
-      message: "An error occurred while listing events",
-      error: e.message,
-    });
+    res
+      .status(500)
+      .json({ msg: "An unexpected error occurred during events list." });
   }
 };
 
-export const createEvent = async (req = request, res) => {
+// Create a new event
+export const createEvent = async (req, res) => {
   try {
-    const { name, description, startDate, endDate, hotel, resources } =
-      req.body;
-    const newEvent = new Event({
-      name,
-      description,
-      startDate,
-      endDate,
-      hotel,
-      resources,
-    });
-    await newEvent.save();
-    res.status(201).json({
-      msg: "Event created successfully",
-      newEvent,
-    });
+    const { name, description, startDate, endDate, hotel } = req.body;
+    const event = new Event({ name, description, startDate, endDate, hotel });
+    await event.save();
+    res.status(201).json({ msg: "Event created successfully", event });
   } catch (e) {
     console.error(e);
-    res.status(500).json({
-      msg: "An unexpected error ocurred during Event creation",
-      error: e.message,
-    });
+    res
+      .status(500)
+      .json({ msg: "An unexpected error occurred during event creation." });
   }
 };
 
+// Get event by ID
+export const getEventById = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const event = await Event.findById(id)
+      .populate("hotel")
+      .populate("attendees");
+    if (!event) {
+      return res.status(404).json({ msg: "Event not found." });
+    }
+    res.status(200).json({ event });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ msg: "An unexpected error occurred during fetching event." });
+  }
+};
+
+// Edit event information
 export const editEvent = async (req, res) => {
   const id = req.params.id;
   const { ...rest } = req.body;
+
   try {
-    const updatedEvent = await Event.findByIdAndUpdate(id, rest, { new: true });
-    res.status(200).json({
-      msg: "Event successfully updated!",
-      event: updatedEvent,
+    const updatedEvent = await Event.findByIdAndUpdate(id, rest, {
+      new: true,
+      runValidators: true,
     });
-  } catch (e) {
-    console.error(e);
+    res
+      .status(200)
+      .json({ msg: "Event successfully updated!", event: updatedEvent });
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ msg: "Error updating the event." });
   }
 };
 
-export const deactivateEvent = async (req, res) => {
-  const id = req.params.id;
+// Delete an event
+export const cancelEvent = async (req, res) => {
+  const eventId = req.params.id;
   try {
-    const updatedEvent = await Event.findByIdAndUpdate(
-      id,
+    const cancelledEvent = await Event.findByIdAndUpdate(
+      eventId,
       { status: "cancelled" },
       { new: true }
     );
     res.json({
-      msg: "Event deactivated successfully.",
-      event: { id: updatedEvent._id, status: updatedEvent.status },
+      msg: "Event cancelled successfully.",
+      user: { id: cancelledEvent._id, status: cancelledEvent.status },
     });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ msg: "Error deactivating the Event." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Error canceling the event." });
   }
 };

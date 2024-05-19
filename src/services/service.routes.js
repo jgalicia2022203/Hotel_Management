@@ -8,12 +8,15 @@ import {
   createService,
   deactivateService,
   editService,
+  getServiceById,
   listServices,
 } from "./service.controller.js";
 
 const router = Router();
 
 router.get("/", validateJWT, listServices);
+
+router.get("/:id", validateJWT, getServiceById);
 
 router.post(
   "/",

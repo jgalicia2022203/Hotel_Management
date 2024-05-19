@@ -8,12 +8,15 @@ import {
   createAmenity,
   deleteAmenity,
   listAmenities,
+  getAmenityById,
   updateAmenity,
 } from "./amenity.controller.js";
 
 const router = Router();
 
 router.get("/", validateJWT, isAdmin, listAmenities);
+
+router.get("/:id", validateJWT, isAdmin, getAmenityById)
 
 router.post(
   "/",

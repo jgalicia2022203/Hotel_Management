@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const HotelSchema = mongoose.Schema({
+const HotelSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "The name is required"],
@@ -14,27 +14,31 @@ const HotelSchema = mongoose.Schema({
     type: String,
     required: [true, "The address is required"],
   },
+  phone: {
+    type: String,
+    required: [true, "The phone number is required"],
+  },
+  email: {
+    type: String,
+    required: [true, "The email is required"],
+  },
   category: {
     type: String,
     required: [true, "The category is required"],
     default: "several",
   },
-  amenities: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Amenity",
-  },
-  rooms: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Room",
-  },
-  events: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Event",
-  },
+  amenities: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Amenity",
+    },
+  ],
   status: {
-    type: Boolean,
-    default: true,
+    type: String,
+    enum: ["available", "under_maintenance", "inactive"],
+    default: "available",
   },
+  images: [String],
 });
 
 HotelSchema.methods.toJSON = function () {

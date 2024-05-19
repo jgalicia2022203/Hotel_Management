@@ -9,6 +9,7 @@ const UserSchema = mongoose.Schema({
   username: {
     type: String,
     required: [true, "The username is obligatory"],
+    unique: true,
   },
   email: {
     type: String,
@@ -41,16 +42,19 @@ const UserSchema = mongoose.Schema({
   },
 });
 
+// Indexes
+UserSchema.index({ email: 1 });
+UserSchema.index({ username: 1 });
+
 UserSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+    this.password = await bcrypt.hash(this.password, 10);
   }
   next();
 });
 
-UserSchema.pre("findOneAndUpdate", async function (next) {
-  this.set({ updated_at: new Date() });
+UserSchema.pre("findOneAndUpdate", function (next) {
+  this.set({ updated_at: Date.now() });
   next();
 });
 

@@ -8,12 +8,15 @@ import {
   createHotel,
   deactivateHotel,
   editHotel,
+  getHotelById,
   listHotels,
 } from "./hotel.controller.js";
 
 const router = Router();
 
 router.get("/", validateJWT, listHotels);
+
+router.get("/:id", validateJWT, getHotelById);
 
 router.post(
   "/",
@@ -24,9 +27,12 @@ router.post(
       .notEmpty()
       .withMessage("the name cannot be empty")
       .custom(hotelExists),
-    check("description", "the description cannot be empty").notEmpty(),
-    check("address", "the address cannot be empty").notEmpty(),
-    check("category", "the category cannot be empty").notEmpty(),
+    check("description")
+      .notEmpty()
+      .withMessage("the description cannot be empty"),
+    check("address").notEmpty().withMessage("the address cannot be empty"),
+    check("phone").notEmpty().withMessage("the phone number cannot be empty"),
+    check("email").notEmpty().withMessage("the email cannot be empty"),
     validateFields,
   ],
   createHotel
@@ -42,11 +48,22 @@ router.put(
       .notEmpty()
       .withMessage("the name cannot be empty")
       .custom(hotelExists),
-    check("description", "the description cannot be empty")
+    check("description")
       .optional()
-      .notEmpty(),
-    check("address", "the address cannot be empty").optional().notEmpty(),
-    check("category", "the category cannot be empty").optional().notEmpty(),
+      .notEmpty()
+      .withMessage("the description cannot be empty"),
+    check("address")
+      .optional()
+      .notEmpty()
+      .withMessage("the address cannot be empty"),
+    check("phone")
+      .optional()
+      .notEmpty()
+      .withMessage("the phone number cannot be empty"),
+    check("email")
+      .optional()
+      .notEmpty()
+      .withMessage("the email cannot be empty"),
     validateFields,
   ],
   editHotel

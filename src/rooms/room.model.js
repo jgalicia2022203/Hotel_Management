@@ -17,15 +17,29 @@ const RoomSchema = mongoose.Schema({
     type: Number,
     required: [true, "The price per night is required"],
   },
-  hotel_id: {
+  hotel: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Hotel",
     required: [true, "The hotel ID is required"],
   },
-  availability: {
-    type: Boolean,
-    default: true,
+  status: {
+    type: String,
+    enum: ["available", "booked", "under_maintenance"],
+    default: "available",
   },
+  images: [String],
+  booked_dates: [
+    {
+      startDate: Date,
+      endDate: Date,
+    },
+  ],
+  amenities: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Amenity",
+    },
+  ],
 });
 
 RoomSchema.methods.toJSON = function () {

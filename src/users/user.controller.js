@@ -1,45 +1,42 @@
 import bcrypt from "bcryptjs";
 import { request, response } from "express";
-import User from "../users/user.model.js";
+import User from "./user.model.js";
 
+// List all users with pagination
 export const listUsers = async (req = request, res = response) => {
   try {
-    const { limit, from } = req.query;
-
+    const { limit = 10, from = 0 } = req.query;
     const [total, users] = await Promise.all([
       User.countDocuments(),
       User.find().skip(Number(from)).limit(Number(limit)),
     ]);
-
-    res.status(200).json({
-      total,
-      users,
-    });
+    res.status(200).json({ total, users });
   } catch (e) {
     console.error(e);
-    res.status(500).json({
-      msg: "An unexpected error occurred during user list.",
-    });
+    res
+      .status(500)
+      .json({ msg: "An unexpected error occurred during user list." });
   }
 };
 
-export const register = async (req, res) => {
+// Get user by ID
+export const getUserById = async (req, res) => {
+  const id = req.params.id;
   try {
-    const { name, username, email, password } = req.body;
-    const user = new User({ name, username, email, password });
-    await user.save();
-    res.status(201).json({
-      msg: "User Registered in the database!",
-      user,
-    });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({
-      msg: "An unexpected error occurred during user registration.",
-    });
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ msg: "User not found." });
+    }
+    res.status(200).json({ user });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ msg: "An unexpected error occurred during fetching user." });
   }
 };
 
+// Edit user information
 export const editInfo = async (req, res) => {
   const id = req.params.id;
   const { password, ...rest } = req.body;
@@ -49,17 +46,20 @@ export const editInfo = async (req, res) => {
       const salt = await bcrypt.genSalt(10);
       rest.password = await bcrypt.hash(password, salt);
     }
-    const updatedUser = await User.findByIdAndUpdate(id, rest, { new: true });
-    res.status(200).json({
-      msg: "User successfully updated!",
-      user: updatedUser,
+    const updatedUser = await User.findByIdAndUpdate(id, rest, {
+      new: true,
+      runValidators: true,
     });
+    res
+      .status(200)
+      .json({ msg: "User successfully updated!", user: updatedUser });
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Error updating the user." });
   }
 };
 
+// Deactivate a user
 export const deactivateUser = async (req, res) => {
   const userId = req.params.id;
 
@@ -76,5 +76,25 @@ export const deactivateUser = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Error deactivating the user." });
+  }
+};
+
+// Reactivate a user
+export const reactivateUser = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { status: true },
+      { new: true }
+    );
+    res.json({
+      msg: "Account activated again successfully.",
+      user: { id: updatedUser._id, status: updatedUser.status },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Error activating the user again." });
   }
 };

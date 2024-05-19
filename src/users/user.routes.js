@@ -4,9 +4,9 @@ import {
   emailExists,
   usernameExists,
 } from "../common/helpers/db-validators.js";
-import { restrictDateCreationChange } from "../common/middlewares/restrictDateCreationChange.js";
-import { restrictRoleChange } from "../common/middlewares/restrictRoleChange.js";
-import { restrictStatusChange } from "../common/middlewares/restrictStatusChange.js";
+import { restrictDateCreationChange } from "../common/middlewares/restrict-date-creation-change.js";
+import { restrictRoleChange } from "../common/middlewares/restrict-role-change.js";
+import { restrictStatusChange } from "../common/middlewares/restrict-status-change.js";
 import { validateFields } from "../common/middlewares/validate-fields.js";
 import { validateJWT } from "../common/middlewares/validate-jwt.js";
 import { validRole } from "../common/middlewares/validate-role.js";
@@ -15,8 +15,9 @@ import { verifyUser } from "../common/middlewares/verify-user.js";
 import {
   deactivateUser,
   editInfo,
+  getUserById,
   listUsers,
-  register,
+  reactivateUser,
 } from "./user.controller.js";
 
 const router = Router();
@@ -25,30 +26,7 @@ const router = Router();
 
 router.get("/", validateJWT, isAdmin, listUsers);
 
-router.post(
-  "/register",
-  [
-    check("name").notEmpty().withMessage("The name cannot be empty"),
-    check("username")
-      .notEmpty()
-      .withMessage("The username cannot be empty")
-      .custom(usernameExists),
-    check("email")
-      .notEmpty()
-      .withMessage("The email cannot be empty")
-      .isEmail()
-      .withMessage("The email is invalid")
-      .custom(emailExists),
-    check("password")
-      .notEmpty()
-      .withMessage("The password is obligatory")
-      .isLength({ min: 6 })
-      .withMessage("The password must be at least 6 characters"),
-    validRole,
-    validateFields,
-  ],
-  register
-);
+router.get("/:id", validateJWT, isAdmin, getUserById);
 
 router.put(
   "/:id",
@@ -75,7 +53,9 @@ router.put(
   editInfo
 );
 
-router.patch("/:id", validateJWT, isAdmin, deactivateUser);
+router.patch("/deactivate/:id", validateJWT, isAdmin, deactivateUser);
+
+router.patch("/reactivate/:id", validateJWT, isAdmin, reactivateUser);
 
 // USER ROUTES
 

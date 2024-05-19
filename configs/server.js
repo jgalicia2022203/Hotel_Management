@@ -6,6 +6,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import amenitiesRoutes from "../src/amenities/amenity.routes.js";
 import authRoutes from "../src/auth/auth.routes.js";
+import bookingRoutes from "../src/bookings/booking.routes.js";
 import { errorHandler } from "../src/common/middlewares/error-handler.js";
 import apiLimiter from "../src/common/middlewares/validate-amount-petitions.js";
 import eventRoutes from "../src/events/event.routes.js";
@@ -14,7 +15,7 @@ import invoiceRoutes from "../src/invoices/invoice.routes.js";
 import roomRoutes from "../src/rooms/room.routes.js";
 import serviceRoutes from "../src/services/service.routes.js";
 import userRoutes from "../src/users/user.routes.js";
-import { DBData } from "./db-data.js";
+import { seedDatabase } from "./db-data.js";
 import { dbConnection } from "./mongo.js";
 
 class Server {
@@ -30,6 +31,7 @@ class Server {
     this.roomPath = "/kinalgo/v1/rooms";
     this.servicePath = "/kinalgo/v1/services";
     this.userPath = "/kinalgo/v1/users";
+    this.bookingPath = "/kinalgo/v1/bookings";
     this.middlewares();
     this.connectDB();
     this.routes();
@@ -57,7 +59,7 @@ class Server {
 
   async connectDB() {
     await dbConnection();
-    DBData();
+    seedDatabase();
   }
 
   middlewares() {
@@ -78,6 +80,7 @@ class Server {
     this.app.use(this.roomPath, roomRoutes);
     this.app.use(this.servicePath, serviceRoutes);
     this.app.use(this.userPath, userRoutes);
+    this.app.use(this.bookingPath, bookingRoutes);
     this.app.use(errorHandler);
   }
 

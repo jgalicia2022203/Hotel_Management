@@ -4,14 +4,18 @@ import { validateFields } from "../common/middlewares/validate-fields.js";
 import { validateJWT } from "../common/middlewares/validate-jwt.js";
 import { isAdmin } from "../common/middlewares/verify-admin.js";
 import {
+  cancelInvoice,
   createInvoice,
+  getInvoiceById,
   listInvoices,
-  updateInvoiceStatus,
 } from "./invoice.controller.js";
 
 const router = Router();
 
 router.get("/", validateJWT, isAdmin, listInvoices);
+
+router.get("/:id", validateJWT, isAdmin, getInvoiceById);
+
 router.post(
   "/",
   validateJWT,
@@ -33,15 +37,7 @@ router.post(
   ],
   createInvoice
 );
-router.put(
-  "/:id",
-  validateJWT,
-  isAdmin,
-  [
-    check("status").notEmpty().withMessage("the status cannot be empty"),
-    validateFields,
-  ],
-  updateInvoiceStatus
-);
+
+router.patch("/:id", validateJWT, isAdmin, cancelInvoice);
 
 export default router;

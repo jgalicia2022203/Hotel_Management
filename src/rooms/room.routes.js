@@ -7,11 +7,15 @@ import {
   createRoom,
   deactivateRoom,
   editRoom,
+  getRoomById,
   listRooms,
 } from "./room.controller.js";
 
 const router = Router();
 router.get("/", validateJWT, isAdmin, listRooms);
+
+router.get("/:id", validateJWT, isAdmin, getRoomById);
+
 router.post(
   "/",
   validateJWT,
@@ -23,11 +27,36 @@ router.post(
     check("price_per_night", "the price per night cannot be empty")
       .not()
       .isEmpty(),
+    check("hotel", "the hotel cannot be empty").not().isEmpty(),
     validateFields,
   ],
   createRoom
 );
-router.put("/:id", validateJWT, isAdmin, editRoom);
+
+router.put(
+  "/:id",
+  validateJWT,
+  isAdmin,
+  [
+    check("room_number", "the room number can't be empty")
+      .optional()
+      .not()
+      .isEmpty(),
+    check("type", "the type cannot be empty").optional().not().isEmpty(),
+    check("capacity", "the capacity cannot be empty")
+      .optional()
+      .not()
+      .isEmpty(),
+    check("price_per_night", "the price per night cannot be empty")
+      .optional()
+      .not()
+      .isEmpty(),
+    check("hotel", "the hotel cannot be empty").optional().not().isEmpty(),
+    validateFields,
+  ],
+  editRoom
+);
+
 router.patch("/:id", validateJWT, isAdmin, deactivateRoom);
 
 export default router;

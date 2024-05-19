@@ -2,6 +2,7 @@ import bcryptjs from "bcryptjs";
 import { generateJWT } from "../common/helpers/generate-jwt.js";
 import User from "../users/user.model.js";
 
+// Login
 export const auth = async (req, res) => {
   const { email, password } = req.body;
 
@@ -36,5 +37,19 @@ export const auth = async (req, res) => {
     res.status(500).json({
       msg: "Contact the administrator",
     });
+  }
+};
+
+export const register = async (req, res) => {
+  try {
+    const { name, username, email, password } = req.body;
+    const user = new User({ name, username, email, password });
+    await user.save();
+    res.status(201).json({ msg: "User Registered in the database!", user });
+  } catch (e) {
+    console.error(e);
+    res
+      .status(500)
+      .json({ msg: "An unexpected error occurred during user registration." });
   }
 };
