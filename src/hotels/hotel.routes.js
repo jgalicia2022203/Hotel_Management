@@ -9,16 +9,22 @@ import { validateFields } from "../common/middlewares/validate-fields.js";
 import { validateJWT } from "../common/middlewares/validate-jwt.js";
 import { isAdmin } from "../common/middlewares/verify-admin.js";
 import {
+  bookHotel,
   createHotel,
   deactivateHotel,
   editHotel,
-  getHotelById,
+  getHotelDetails,
   listHotels,
+  searchHotels,
 } from "./hotel.controller.js";
 
 const router = Router();
 
 router.get("/", validateJWT, listHotels);
+
+router.post('/search', searchHotels);
+
+router.post("/:id/book", validateJWT, bookHotel);
 
 router.get(
   "/:id",
@@ -28,7 +34,7 @@ router.get(
     check("id").isMongoId().withMessage("Invalid ID format"),
     validateFields,
   ],
-  getHotelById
+  getHotelDetails
 );
 
 router.post(

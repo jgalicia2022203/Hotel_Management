@@ -30,7 +30,6 @@ router.get("/", validateJWT, isAdmin, listUsers);
 router.get(
   "/:id",
   validateJWT,
-  isAdmin,
   [
     check("id").custom(userExistsById),
     check("id").isMongoId().withMessage("Invalid ID format"),
@@ -108,8 +107,8 @@ router.put(
       .withMessage("The email cannot be empty")
       .custom(emailExists),
     check("password", "The password must be at least 6 characters")
-      .isLength({ min: 6 })
-      .optional(),
+      .optional()
+      .isLength({ min: 6 }),
     validateFields,
   ],
   restrictStatusChange,

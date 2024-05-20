@@ -1,6 +1,7 @@
 import { request, response } from "express";
+import Booking from "../bookings/booking.model.js";
+import Room from "../rooms/room.model.js";
 import Hotel from "./hotel.model.js";
-
 // List all hotels with pagination
 export const listHotels = async (req = request, res = response) => {
   try {
@@ -22,21 +23,107 @@ export const listHotels = async (req = request, res = response) => {
 };
 
 // Get hotel by ID
-export const getHotelById = async (req, res) => {
-  const id = req.params.id;
+export const getHotelDetails = async (req, res) => {
   try {
-    const hotel = await Hotel.findById(id)
-      .populate("amenities")
-      .populate("rooms");
+    const { id } = req.params;
+    const hotel = await Hotel.findById(id).populate("rooms amenities");
     if (!hotel) {
-      return res.status(404).json({ msg: "Hotel not found." });
+      return res.status(404).json({ msg: "Hotel not found" });
     }
-    res.status(200).json({ hotel });
+    res.json(hotel);
   } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ msg: "An unexpected error occurred during fetching hotel." });
+    res.status(500).json({ msg: "Error fetching hotel details", error });
+  }
+};
+
+export const searchHotels = async (req, res) => {
+  const { address, startDate, endDate } = req.body;
+
+  try {
+    console.log("Search request received with:", {
+      address,
+      startDate,
+      endDate,
+    });
+
+    const hotels = await Hotel.find({
+      address: new RegExp(address, "i"),
+    }).populate("rooms");
+
+    const availableHotels = hotels.filter((hotel) => {
+      const availableRooms = hotel.rooms.filter((room) => {
+        const isBooked = room.booked_dates.some(
+          (date) =>
+            (new Date(startDate) >= new Date(date.startDate) &&
+              new Date(startDate) <= new Date(date.endDate)) ||
+            (new Date(endDate) >= new Date(date.startDate) &&
+              new Date(endDate) <= new Date(date.endDate))
+        );
+        return !isBooked;
+      });
+      return availableRooms.length > 0;
+    });
+
+    console.log("Available hotels:", availableHotels);
+
+    res.status(200).json(availableHotels);
+  } catch (error) {
+    console.error("Search error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Controlador para realizar una reserva
+export const bookHotel = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { startDate, endDate, roomId, guests } = req.body;
+
+    const room = await Room.findOne({
+      _id: roomId,
+      hotel: id,
+      status: "available",
+      $or: [
+        {
+          booked_dates: {
+            $not: {
+              $elemMatch: {
+                startDate: { $lte: new Date(endDate) },
+                endDate: { $gte: new Date(startDate) },
+              },
+            },
+          },
+        },
+        { booked_dates: { $exists: false } },
+      ],
+    });
+
+    if (!room) {
+      return res
+        .status(404)
+        .json({ msg: "No available rooms found for the selected dates" });
+    }
+
+    room.booked_dates.push({
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
+    });
+    room.status = "booked";
+    await room.save();
+
+    const newBooking = new Booking({
+      hotel: id,
+      room: room._id,
+      user: req.user.id,
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
+      status: "confirmed",
+    });
+
+    await newBooking.save();
+    res.status(201).json({ msg: "Booking successful", booking: newBooking });
+  } catch (error) {
+    res.status(500).json({ msg: "Error booking hotel", error });
   }
 };
 

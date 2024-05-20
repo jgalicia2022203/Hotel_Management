@@ -28,7 +28,7 @@ export const auth = async (req, res) => {
     const token = await generateJWT(user.id);
 
     res.status(200).json({
-      msg: `Welcome ${user.username}!`,
+      user,
       token,
     });
   } catch (e) {
