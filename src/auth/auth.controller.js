@@ -28,8 +28,7 @@ export const auth = async (req, res) => {
     const token = await generateJWT(user.id);
 
     res.status(200).json({
-      msg: "Welcome!",
-      user,
+      msg: `Welcome ${user.username}!`,
       token,
     });
   } catch (e) {
@@ -45,7 +44,7 @@ export const register = async (req, res) => {
     const { name, username, email, password } = req.body;
     const user = new User({ name, username, email, password });
     await user.save();
-    res.status(201).json({ msg: "User Registered in the database!", user });
+    res.status(201).json({ msg: "User Registered, Welcome!" });
   } catch (e) {
     console.error(e);
     res

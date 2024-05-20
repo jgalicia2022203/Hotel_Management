@@ -1,13 +1,24 @@
 import { request, response } from "express";
+import Hotel from "../hotels/hotel.model.js";
 import Room from "./room.model.js";
 
 // List all rooms with pagination
 export const listRooms = async (req = request, res = response) => {
   try {
-    const { limit = 10, from = 0 } = req.query;
+    const { limit, from } = req.query;
     const [total, rooms] = await Promise.all([
       Room.countDocuments(),
-      Room.find().skip(Number(from)).limit(Number(limit)),
+      Room.find()
+        .skip(Number(from))
+        .limit(Number(limit))
+        .populate({
+          path: "hotel",
+          select: "name -_id",
+        })
+        .populate({
+          path: "amenities",
+          select: "description -_id",
+        }),
     ]);
     res.status(200).json({ total, rooms });
   } catch (e) {
@@ -18,34 +29,19 @@ export const listRooms = async (req = request, res = response) => {
   }
 };
 
-// Create a new room
-export const createRoom = async (req, res) => {
-  try {
-    const { room_number, type, capacity, price_per_night, hotel } = req.body;
-    const room = new Room({
-      room_number,
-      type,
-      capacity,
-      price_per_night,
-      hotel,
-    });
-    await room.save();
-    res.status(201).json({ msg: "Room created successfully", room });
-  } catch (e) {
-    console.error(e);
-    res
-      .status(500)
-      .json({ msg: "An unexpected error occurred during room creation." });
-  }
-};
-
 // Get room by ID
 export const getRoomById = async (req, res) => {
   const id = req.params.id;
   try {
     const room = await Room.findById(id)
-      .populate("hotel")
-      .populate("amenities");
+      .populate({
+        path: "hotel",
+        select: "name -_id",
+      })
+      .populate({
+        path: "amenities",
+        select: "description -_id",
+      });
     if (!room) {
       return res.status(404).json({ msg: "Room not found." });
     }
@@ -55,6 +51,42 @@ export const getRoomById = async (req, res) => {
     res
       .status(500)
       .json({ msg: "An unexpected error occurred during fetching room." });
+  }
+};
+
+// Create a new room
+export const createRoom = async (req, res) => {
+  try {
+    const {
+      room_number,
+      type,
+      capacity,
+      price_per_night,
+      hotel,
+      amenities = [],
+      images = [],
+    } = req.body;
+    const room = new Room({
+      room_number,
+      type,
+      capacity,
+      price_per_night,
+      hotel,
+      amenities,
+      images,
+    });
+    await room.save();
+    await Hotel.findByIdAndUpdate(
+      hotel,
+      { $push: { rooms: room._id } },
+      { new: true, useFindAndModify: false }
+    );
+    res.status(201).json({ msg: "Room created successfully", room });
+  } catch (e) {
+    console.error(e);
+    res
+      .status(500)
+      .json({ msg: "An unexpected error occurred during room creation." });
   }
 };
 
@@ -77,8 +109,8 @@ export const editRoom = async (req, res) => {
   }
 };
 
-// Deactivate a room
-export const deactivateRoom = async (req, res) => {
+// Put under maintenance a room
+export const maintenanceRoom = async (req, res) => {
   const id = req.params.id;
 
   try {

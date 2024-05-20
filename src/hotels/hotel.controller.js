@@ -4,10 +4,13 @@ import Hotel from "./hotel.model.js";
 // List all hotels with pagination
 export const listHotels = async (req = request, res = response) => {
   try {
-    const { limit = 10, from = 0 } = req.query;
+    const { limit, from } = req.query;
     const [total, hotels] = await Promise.all([
       Hotel.countDocuments(),
-      Hotel.find().skip(Number(from)).limit(Number(limit)),
+      Hotel.find().skip(Number(from)).limit(Number(limit)).populate({
+        path: "amenities",
+        select: "description -_id",
+      }),
     ]);
     res.status(200).json({ total, hotels });
   } catch (e) {
@@ -18,26 +21,13 @@ export const listHotels = async (req = request, res = response) => {
   }
 };
 
-// Create a new hotel
-export const createHotel = async (req, res) => {
-  try {
-    const { name, description, address, phone, email } = req.body;
-    const hotel = new Hotel({ name, description, address, phone, email });
-    await hotel.save();
-    res.status(201).json({ msg: "Hotel created successfully", hotel });
-  } catch (e) {
-    console.error(e);
-    res
-      .status(500)
-      .json({ msg: "An unexpected error occurred during hotel creation." });
-  }
-};
-
 // Get hotel by ID
 export const getHotelById = async (req, res) => {
   const id = req.params.id;
   try {
-    const hotel = await Hotel.findById(id).populate("amenities");
+    const hotel = await Hotel.findById(id)
+      .populate("amenities")
+      .populate("rooms");
     if (!hotel) {
       return res.status(404).json({ msg: "Hotel not found." });
     }
@@ -47,6 +37,39 @@ export const getHotelById = async (req, res) => {
     res
       .status(500)
       .json({ msg: "An unexpected error occurred during fetching hotel." });
+  }
+};
+
+// Create a new hotel
+export const createHotel = async (req, res) => {
+  try {
+    const {
+      name,
+      description,
+      address,
+      phone,
+      email,
+      amenities = [],
+      images = [],
+      ...rest
+    } = req.body;
+    const hotel = new Hotel({
+      name,
+      description,
+      address,
+      phone,
+      email,
+      amenities,
+      images,
+      ...rest,
+    });
+    await hotel.save();
+    res.status(201).json({ msg: "Hotel created successfully", hotel });
+  } catch (e) {
+    console.error(e);
+    res
+      .status(500)
+      .json({ msg: "An unexpected error occurred during hotel creation." });
   }
 };
 
@@ -66,6 +89,26 @@ export const editHotel = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Error updating the hotel." });
+  }
+};
+
+// Put on maintenance a hotel
+export const maintenanceHotel = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const updatedHotel = await Hotel.findByIdAndUpdate(
+      id,
+      { status: "under_maintenance" },
+      { new: true }
+    );
+    res.json({
+      msg: "Hotel under maintenance successfully.",
+      hotel: { id: updatedHotel._id, status: updatedHotel.status },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Error putting on maintenance the hotel." });
   }
 };
 

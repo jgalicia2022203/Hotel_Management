@@ -27,18 +27,28 @@ const HotelSchema = new mongoose.Schema({
     required: [true, "The category is required"],
     default: "several",
   },
+  status: {
+    type: String,
+    enum: ["available", "under_maintenance", "inactive"],
+    default: "available",
+  },
   amenities: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Amenity",
     },
   ],
-  status: {
-    type: String,
-    enum: ["available", "under_maintenance", "inactive"],
-    default: "available",
-  },
-  images: [String],
+  rooms: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Room",
+    },
+  ],
+  images: [
+    {
+      type: String,
+    },
+  ],
 });
 
 HotelSchema.methods.toJSON = function () {

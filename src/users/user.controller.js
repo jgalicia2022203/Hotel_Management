@@ -5,7 +5,7 @@ import User from "./user.model.js";
 // List all users with pagination
 export const listUsers = async (req = request, res = response) => {
   try {
-    const { limit = 10, from = 0 } = req.query;
+    const { limit, from } = req.query;
     const [total, users] = await Promise.all([
       User.countDocuments(),
       User.find().skip(Number(from)).limit(Number(limit)),
@@ -52,7 +52,7 @@ export const editInfo = async (req, res) => {
     });
     res
       .status(200)
-      .json({ msg: "User successfully updated!", user: updatedUser });
+      .json({ msg: `${updatedUser.username} successfully updated!` });
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Error updating the user." });

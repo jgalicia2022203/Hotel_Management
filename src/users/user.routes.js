@@ -2,6 +2,7 @@ import { Router } from "express";
 import { check } from "express-validator";
 import {
   emailExists,
+  userExistsById,
   usernameExists,
 } from "../common/helpers/db-validators.js";
 import { restrictDateCreationChange } from "../common/middlewares/restrict-date-creation-change.js";
@@ -26,13 +27,25 @@ const router = Router();
 
 router.get("/", validateJWT, isAdmin, listUsers);
 
-router.get("/:id", validateJWT, isAdmin, getUserById);
+router.get(
+  "/:id",
+  validateJWT,
+  isAdmin,
+  [
+    check("id").custom(userExistsById),
+    check("id").isMongoId().withMessage("Invalid ID format"),
+    validateFields,
+  ],
+  getUserById
+);
 
 router.put(
   "/:id",
   validateJWT,
   isAdmin,
   [
+    check("id").custom(userExistsById),
+    check("id").isMongoId().withMessage("Invalid ID format"),
     check("name").optional().notEmpty().withMessage("The name cannot be empty"),
     check("username")
       .optional()
@@ -53,9 +66,27 @@ router.put(
   editInfo
 );
 
-router.patch("/deactivate/:id", validateJWT, isAdmin, deactivateUser);
+router.patch(
+  "/deactivate/:id",
+  validateJWT,
+  isAdmin,
+  [
+    check("id").custom(userExistsById),
+    check("id").isMongoId().withMessage("Invalid ID format"),
+  ],
+  deactivateUser
+);
 
-router.patch("/reactivate/:id", validateJWT, isAdmin, reactivateUser);
+router.patch(
+  "/reactivate/:id",
+  validateJWT,
+  isAdmin,
+  [
+    check("id").custom(userExistsById),
+    check("id").isMongoId().withMessage("Invalid ID format"),
+  ],
+  reactivateUser
+);
 
 // USER ROUTES
 
@@ -64,6 +95,8 @@ router.put(
   validateJWT,
   verifyUser,
   [
+    check("id").custom(userExistsById),
+    check("id").isMongoId().withMessage("Invalid ID format"),
     check("username")
       .optional()
       .notEmpty()
@@ -85,6 +118,15 @@ router.put(
   editInfo
 );
 
-router.patch("/profile-settings/:id", validateJWT, verifyUser, deactivateUser);
+router.patch(
+  "/profile-settings/:id",
+  validateJWT,
+  verifyUser,
+  [
+    check("id").custom(userExistsById),
+    check("id").isMongoId().withMessage("Invalid ID format"),
+  ],
+  deactivateUser
+);
 
 export default router;

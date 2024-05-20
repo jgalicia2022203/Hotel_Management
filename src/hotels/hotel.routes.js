@@ -1,6 +1,10 @@
 import { Router } from "express";
 import { check } from "express-validator";
-import { hotelExists } from "../common/helpers/db-validators.js";
+import {
+  amenitiesExistsById,
+  hotelExists,
+  hotelExistsById,
+} from "../common/helpers/db-validators.js";
 import { validateFields } from "../common/middlewares/validate-fields.js";
 import { validateJWT } from "../common/middlewares/validate-jwt.js";
 import { isAdmin } from "../common/middlewares/verify-admin.js";
@@ -16,7 +20,16 @@ const router = Router();
 
 router.get("/", validateJWT, listHotels);
 
-router.get("/:id", validateJWT, getHotelById);
+router.get(
+  "/:id",
+  validateJWT,
+  [
+    check("id").custom(hotelExistsById),
+    check("id").isMongoId().withMessage("Invalid ID format"),
+    validateFields,
+  ],
+  getHotelById
+);
 
 router.post(
   "/",
@@ -33,6 +46,19 @@ router.post(
     check("address").notEmpty().withMessage("the address cannot be empty"),
     check("phone").notEmpty().withMessage("the phone number cannot be empty"),
     check("email").notEmpty().withMessage("the email cannot be empty"),
+    check("category")
+      .optional()
+      .notEmpty()
+      .withMessage("the category cannot be empty"),
+    check("amenities")
+      .optional()
+      .notEmpty()
+      .withMessage("the amenities cannot be empty")
+      .custom(amenitiesExistsById),
+    check("images")
+      .optional()
+      .notEmpty()
+      .withMessage("the images cannot be empty"),
     validateFields,
   ],
   createHotel
@@ -43,6 +69,8 @@ router.put(
   validateJWT,
   isAdmin,
   [
+    check("id").custom(hotelExistsById),
+    check("id").isMongoId().withMessage("Invalid ID format"),
     check("name")
       .optional()
       .notEmpty()
@@ -64,11 +92,34 @@ router.put(
       .optional()
       .notEmpty()
       .withMessage("the email cannot be empty"),
+    check("category")
+      .optional()
+      .notEmpty()
+      .withMessage("the category cannot be empty"),
+    check("amenities")
+      .optional()
+      .notEmpty()
+      .withMessage("the amenities cannot be empty")
+      .custom(amenitiesExistsById),
+    check("images")
+      .optional()
+      .notEmpty()
+      .withMessage("the images cannot be empty"),
     validateFields,
   ],
   editHotel
 );
 
-router.patch("/:id", validateJWT, isAdmin, deactivateHotel);
+router.patch(
+  "/:id",
+  validateJWT,
+  isAdmin,
+  [
+    check("id").custom(hotelExistsById),
+    check("id").isMongoId().withMessage("Invalid ID format"),
+    validateFields,
+  ],
+  deactivateHotel
+);
 
 export default router;

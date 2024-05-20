@@ -27,7 +27,11 @@ const RoomSchema = mongoose.Schema({
     enum: ["available", "booked", "under_maintenance"],
     default: "available",
   },
-  images: [String],
+  images: [
+    {
+      type: String,
+    },
+  ],
   booked_dates: [
     {
       startDate: Date,
