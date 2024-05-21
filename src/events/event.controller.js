@@ -1,13 +1,15 @@
 import { request, response } from "express";
 import Event from "./event.model.js";
-
 // List all events with pagination
 export const listEvents = async (req = request, res = response) => {
   try {
     const { limit = 10, from = 0 } = req.query;
     const [total, events] = await Promise.all([
       Event.countDocuments(),
-      Event.find().skip(Number(from)).limit(Number(limit)),
+      Event.find()
+        .skip(Number(from))
+        .limit(Number(limit))
+        .populate("hotel attendees services"),
     ]);
     res.status(200).json({ total, events });
   } catch (e) {
@@ -21,8 +23,24 @@ export const listEvents = async (req = request, res = response) => {
 // Create a new event
 export const createEvent = async (req, res) => {
   try {
-    const { name, description, startDate, endDate, hotel } = req.body;
-    const event = new Event({ name, description, startDate, endDate, hotel });
+    const {
+      name,
+      description,
+      startDate,
+      endDate,
+      hotel,
+      resources,
+      services,
+    } = req.body;
+    const event = new Event({
+      name,
+      description,
+      startDate,
+      endDate,
+      hotel,
+      resources,
+      services,
+    });
     await event.save();
     res.status(201).json({ msg: "Event created successfully", event });
   } catch (e) {
@@ -37,9 +55,7 @@ export const createEvent = async (req, res) => {
 export const getEventById = async (req, res) => {
   const id = req.params.id;
   try {
-    const event = await Event.findById(id)
-      .populate("hotel")
-      .populate("attendees");
+    const event = await Event.findById(id).populate("hotel attendees services");
     if (!event) {
       return res.status(404).json({ msg: "Event not found." });
     }

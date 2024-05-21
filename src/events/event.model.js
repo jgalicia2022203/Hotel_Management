@@ -39,6 +39,12 @@ const eventSchema = new mongoose.Schema({
   resources: {
     type: String,
   },
+  services: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Service",
+    },
+  ],
   images: [String],
 });
 

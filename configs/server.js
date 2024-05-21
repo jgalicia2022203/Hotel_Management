@@ -15,6 +15,8 @@ import invoiceRoutes from "../src/invoices/invoice.routes.js";
 import roomRoutes from "../src/rooms/room.routes.js";
 import serviceRoutes from "../src/services/service.routes.js";
 import userRoutes from "../src/users/user.routes.js";
+import reportRoutes from "../src/reports/report.routes.js";
+
 import { seedDatabase } from "./db-data.js";
 import { dbConnection } from "./mongo.js";
 
@@ -32,6 +34,7 @@ class Server {
     this.servicePath = "/kinalgo/v1/services";
     this.userPath = "/kinalgo/v1/users";
     this.bookingPath = "/kinalgo/v1/bookings";
+    this.reportPath = "/kinalgo/v1/reports";
     this.middlewares();
     this.connectDB();
     this.routes();
@@ -81,6 +84,7 @@ class Server {
     this.app.use(this.servicePath, serviceRoutes);
     this.app.use(this.userPath, userRoutes);
     this.app.use(this.bookingPath, bookingRoutes);
+    this.app.use(this.reportPath, reportRoutes);
     this.app.use(errorHandler);
   }
 

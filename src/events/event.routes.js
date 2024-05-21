@@ -3,7 +3,6 @@ import { check } from "express-validator";
 import { validateFields } from "../common/middlewares/validate-fields.js";
 import { validateJWT } from "../common/middlewares/validate-jwt.js";
 import { isAdmin } from "../common/middlewares/verify-admin.js";
-
 import {
   cancelEvent,
   createEvent,
@@ -33,6 +32,7 @@ router.post(
   ],
   createEvent
 );
+
 router.put(
   "/:id",
   validateJWT,
@@ -53,6 +53,7 @@ router.put(
   ],
   editEvent
 );
+
 router.patch("/:id", validateJWT, isAdmin, cancelEvent);
 
 export default router;
