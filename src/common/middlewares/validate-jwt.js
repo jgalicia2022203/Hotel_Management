@@ -34,3 +34,5 @@ export const validateJWT = async (req, res, next) => {
     return res.status(401).send("Invalid Token");
   }
 };
+
+export default validateJWT;
