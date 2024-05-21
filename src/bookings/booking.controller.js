@@ -1,4 +1,5 @@
 import { request, response } from "express";
+import Invoice from "../invoices/invoice.model.js";
 import Room from "../rooms/room.model.js";
 import Booking from "./booking.model.js";
 
@@ -42,7 +43,21 @@ export const createBooking = async (req, res = response) => {
       status: "booked",
     });
 
-    res.status(201).json({ msg: "Booking created successfully", booking });
+    // Create invoice
+    const invoice_number = `INV-${Date.now()}`;
+    const total = 131.76; // Replace with the actual total calculation
+    const invoice = new Invoice({
+      guest: user,
+      hotel,
+      room,
+      total,
+      invoice_number,
+    });
+    await invoice.save();
+
+    res
+      .status(201)
+      .json({ msg: "Booking created successfully", booking, invoice });
   } catch (e) {
     console.error(e);
     res

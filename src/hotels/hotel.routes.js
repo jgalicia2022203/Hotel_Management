@@ -22,13 +22,12 @@ const router = Router();
 
 router.get("/", validateJWT, listHotels);
 
-router.post('/search', searchHotels);
+router.post("/search", searchHotels);
 
 router.post("/:id/book", validateJWT, bookHotel);
 
 router.get(
   "/:id",
-  validateJWT,
   [
     check("id").custom(hotelExistsById),
     check("id").isMongoId().withMessage("Invalid ID format"),

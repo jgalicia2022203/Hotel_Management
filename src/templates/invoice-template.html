@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        margin: 20px;
+      }
+      .header,
+      .footer {
+        text-align: center;
+      }
+      .details,
+      .services {
+        margin: 20px 0;
+      }
+      .details p,
+      .services p {
+        margin: 5px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Invoice</h1>
+      </div>
+      <div class="details">
+        <p>Invoice Number: {{invoiceNumber}}</p>
+        <p>Guest Name: {{guestName}}</p>
+        <p>Hotel Name: {{hotelName}}</p>
+        <p>Room Number: {{roomNumber}}</p>
+        <p>Total: ${{total}}</p>
+        <p>Issued Date: {{issuedDate}}</p>
+      </div>
+      <div class="services">
+        <h3>Services</h3>
+        <ul>
+          {{services}}
+        </ul>
+      </div>
+      <div class="footer">
+        <p>Thank you for your business!</p>
+      </div>
+    </div>
+  </body>
+</html>

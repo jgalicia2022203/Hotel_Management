@@ -1,9 +1,8 @@
-import { Router } from "express";
+import express from "express";
 import { check } from "express-validator";
 import { validateFields } from "../common/middlewares/validate-fields.js";
 import { validateJWT } from "../common/middlewares/validate-jwt.js";
 import { isAdmin } from "../common/middlewares/verify-admin.js";
-
 import {
   cancelBooking,
   createBooking,
@@ -12,22 +11,20 @@ import {
   listBookings,
 } from "./booking.controller.js";
 
-const router = Router();
+const router = express.Router();
 
 router.get("/", validateJWT, isAdmin, listBookings);
-
 router.get("/:id", validateJWT, isAdmin, getBookingById);
 
 router.post(
   "/",
   validateJWT,
-  isAdmin,
   [
-    check("user").notEmpty().withMessage("the user is needed"),
-    check("hotel").notEmpty().withMessage("the hotel is needed"),
-    check("room").notEmpty().withMessage("the room is needed"),
-    check("startDate").notEmpty().withMessage("start date is needed"),
-    check("endDate").notEmpty().withMessage("end date is needed"),
+    check("user").notEmpty().withMessage("The user is required"),
+    check("hotel").notEmpty().withMessage("The hotel is required"),
+    check("room").notEmpty().withMessage("The room is required"),
+    check("startDate").notEmpty().withMessage("The start date is required"),
+    check("endDate").notEmpty().withMessage("The end date is required"),
     validateFields,
   ],
   createBooking
@@ -36,16 +33,18 @@ router.post(
 router.put(
   "/:id",
   validateJWT,
-  isAdmin,
   [
-    check("user").optional().notEmpty().withMessage("the user is needed"),
-    check("hotel").optional().notEmpty().withMessage("the hotel is needed"),
-    check("room").optional().notEmpty().withMessage("the room is needed"),
+    check("user").optional().notEmpty().withMessage("The user is required"),
+    check("hotel").optional().notEmpty().withMessage("The hotel is required"),
+    check("room").optional().notEmpty().withMessage("The room is required"),
     check("startDate")
       .optional()
       .notEmpty()
-      .withMessage("start date is needed"),
-    check("endDate").optional().notEmpty().withMessage("end date is needed"),
+      .withMessage("The start date is required"),
+    check("endDate")
+      .optional()
+      .notEmpty()
+      .withMessage("The end date is required"),
     validateFields,
   ],
   editBooking
