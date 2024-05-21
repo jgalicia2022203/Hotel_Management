@@ -19,7 +19,6 @@ router.get("/:id", validateJWT, isAdmin, getInvoiceById);
 router.post(
   "/",
   validateJWT,
-  isAdmin,
   [
     check("guest").notEmpty().withMessage("The guest is required"),
     check("hotel").notEmpty().withMessage("The hotel is required"),
