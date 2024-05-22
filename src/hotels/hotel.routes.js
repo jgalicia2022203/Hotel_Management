@@ -16,6 +16,7 @@ import {
   getHotelDetails,
   listHotels,
   searchHotels,
+  getHotelRooms,
 } from "./hotel.controller.js";
 
 const router = Router();
@@ -25,6 +26,17 @@ router.get("/", validateJWT, listHotels);
 router.post("/search", searchHotels);
 
 router.post("/:id/book", validateJWT, bookHotel);
+
+router.get(
+  "/:id/rooms", 
+  [
+    check("id").custom(hotelExistsById),
+    check("id").isMongoId().withMessage("Invalid ID format"),
+    validateFields,
+  ],
+  getHotelRooms
+);
+
 
 router.get(
   "/:id",

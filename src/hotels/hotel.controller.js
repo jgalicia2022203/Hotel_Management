@@ -5,10 +5,11 @@ import Hotel from "./hotel.model.js";
 // List all hotels with pagination
 export const listHotels = async (req = request, res = response) => {
   try {
-    const { limit, from } = req.query;
+    const { limit = 10, from = 0 } = req.query;
+    const query = { status: "available" };
     const [total, hotels] = await Promise.all([
-      Hotel.countDocuments(),
-      Hotel.find().skip(Number(from)).limit(Number(limit)).populate({
+      Hotel.countDocuments(query),
+      Hotel.find(query).skip(Number(from)).limit(Number(limit)).populate({
         path: "amenities",
         select: "description -_id",
       }),
@@ -33,6 +34,22 @@ export const getHotelDetails = async (req, res) => {
     res.json(hotel);
   } catch (error) {
     res.status(500).json({ msg: "Error fetching hotel details", error });
+  }
+};
+
+// Get rooms of a specific hotel
+export const getHotelRooms = async (req = request, res = response) => {
+  try {
+    const { id } = req.params;
+    const rooms = await Room.find({ hotel: id });
+
+    if (!rooms) {
+      return res.status(404).json({ msg: "No rooms found for this hotel" });
+    }
+
+    res.status(200).json(rooms);
+  } catch (error) {
+    res.status(500).json({ msg: "Error fetching rooms for this hotel", error });
   }
 };
 
