@@ -53,6 +53,24 @@ export const getHotelRooms = async (req = request, res = response) => {
   }
 };
 
+export const getHotelBookings = async (req = request, res = response) => {
+  try {
+    const { id } = req.params;
+    const bookings = await Booking.find({ hotel: id }).populate("user room");
+
+    if (!bookings.length) {
+      return res.status(404).json({ msg: "No bookings found for this hotel" });
+    }
+
+    res.status(200).json(bookings);
+  } catch (error) {
+    console.error("Error fetching bookings for this hotel:", error);
+    res
+      .status(500)
+      .json({ msg: "Error fetching bookings for this hotel", error });
+  }
+};
+
 export const searchHotels = async (req, res) => {
   const { address, startDate, endDate } = req.body;
 

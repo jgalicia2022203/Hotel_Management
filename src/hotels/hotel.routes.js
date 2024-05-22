@@ -13,10 +13,11 @@ import {
   createHotel,
   deactivateHotel,
   editHotel,
+  getHotelBookings,
   getHotelDetails,
+  getHotelRooms,
   listHotels,
   searchHotels,
-  getHotelRooms,
 } from "./hotel.controller.js";
 
 const router = Router();
@@ -28,7 +29,7 @@ router.post("/search", searchHotels);
 router.post("/:id/book", validateJWT, bookHotel);
 
 router.get(
-  "/:id/rooms", 
+  "/:id/rooms",
   [
     check("id").custom(hotelExistsById),
     check("id").isMongoId().withMessage("Invalid ID format"),
@@ -37,6 +38,15 @@ router.get(
   getHotelRooms
 );
 
+router.get(
+  "/:id/bookings",
+  [
+    check("id").custom(hotelExistsById),
+    check("id").isMongoId().withMessage("Invalid ID format"),
+    validateFields,
+  ],
+  getHotelBookings
+);
 
 router.get(
   "/:id",
