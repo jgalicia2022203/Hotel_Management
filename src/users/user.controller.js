@@ -5,7 +5,7 @@ import User from "./user.model.js";
 // List all users with pagination
 export const listUsers = async (req = request, res = response) => {
   try {
-    const { limit, from } = req.query;
+    const { limit = 10, from = 0 } = req.query;
     const [total, users] = await Promise.all([
       User.countDocuments(),
       User.find().skip(Number(from)).limit(Number(limit)),
