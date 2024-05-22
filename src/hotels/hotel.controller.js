@@ -1,7 +1,10 @@
 import { request, response } from "express";
 import Booking from "../bookings/booking.model.js";
+import Event from "../events/event.model.js";
 import Room from "../rooms/room.model.js";
+import Service from "../services/service.model.js";
 import Hotel from "./hotel.model.js";
+
 // List all hotels with pagination
 export const listHotels = async (req = request, res = response) => {
   try {
@@ -68,6 +71,44 @@ export const getHotelBookings = async (req = request, res = response) => {
     res
       .status(500)
       .json({ msg: "Error fetching bookings for this hotel", error });
+  }
+};
+
+export const getHotelServices = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const services = await Service.find({ hotel: id });
+
+    if (!services.length) {
+      return res.status(404).json({ msg: "No services found for this hotel" });
+    }
+
+    res.status(200).json({ services });
+  } catch (error) {
+    console.error("Error fetching services for this hotel:", error);
+    res
+      .status(500)
+      .json({ msg: "Error fetching services for this hotel", error });
+  }
+};
+
+export const getHotelEvents = async (req = request, res = response) => {
+  try {
+    const { id } = req.params;
+    const events = await Event.find({ hotel: id }).populate(
+      "hotel attendees services"
+    );
+
+    if (!events.length) {
+      return res.status(404).json({ msg: "No events found for this hotel" });
+    }
+
+    res.status(200).json(events);
+  } catch (error) {
+    console.error("Error fetching events for this hotel:", error);
+    res
+      .status(500)
+      .json({ msg: "Error fetching events for this hotel", error });
   }
 };
 

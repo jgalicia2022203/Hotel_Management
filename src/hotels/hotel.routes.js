@@ -15,7 +15,9 @@ import {
   editHotel,
   getHotelBookings,
   getHotelDetails,
+  getHotelEvents,
   getHotelRooms,
+  getHotelServices,
   listHotels,
   searchHotels,
 } from "./hotel.controller.js";
@@ -47,6 +49,18 @@ router.get(
   ],
   getHotelBookings
 );
+
+router.get(
+  "/:id/events",
+  [
+    check("id").custom(hotelExistsById),
+    check("id").isMongoId().withMessage("Invalid ID format"),
+    validateFields,
+  ],
+  getHotelEvents
+);
+
+router.get("/:id/services", validateJWT, getHotelServices);
 
 router.get(
   "/:id",

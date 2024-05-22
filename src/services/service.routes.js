@@ -3,7 +3,6 @@ import { check } from "express-validator";
 import { validateFields } from "../common/middlewares/validate-fields.js";
 import { validateJWT } from "../common/middlewares/validate-jwt.js";
 import { isAdmin } from "../common/middlewares/verify-admin.js";
-
 import {
   createService,
   deactivateService,
