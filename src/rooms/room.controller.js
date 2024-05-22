@@ -5,20 +5,15 @@ import Room from "./room.model.js";
 // List all rooms with pagination
 export const listRooms = async (req = request, res = response) => {
   try {
-    const { limit, from } = req.query;
+    const { limit = 10, from = 0 } = req.query;
+    const query = {};
     const [total, rooms] = await Promise.all([
-      Room.countDocuments(),
-      Room.find()
+      Room.countDocuments(query),
+      Room.find(query)
         .skip(Number(from))
         .limit(Number(limit))
-        .populate({
-          path: "hotel",
-          select: "name -_id",
-        })
-        .populate({
-          path: "amenities",
-          select: "description -_id",
-        }),
+        .populate("hotel")
+        .populate("amenities"),
     ]);
     res.status(200).json({ total, rooms });
   } catch (e) {
@@ -90,16 +85,24 @@ export const createRoom = async (req, res) => {
   }
 };
 
-// Edit room information
 export const editRoom = async (req, res) => {
   const id = req.params.id;
-  const { ...rest } = req.body;
+  const { room_number, type, capacity, price_per_night, status } = req.body;
 
   try {
-    const updatedRoom = await Room.findByIdAndUpdate(id, rest, {
-      new: true,
-      runValidators: true,
-    });
+    const updatedRoom = await Room.findByIdAndUpdate(
+      id,
+      { room_number, type, capacity, price_per_night, status },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!updatedRoom) {
+      return res.status(404).json({ msg: "Room not found." });
+    }
+
     res
       .status(200)
       .json({ msg: "Room successfully updated!", room: updatedRoom });
@@ -110,18 +113,14 @@ export const editRoom = async (req, res) => {
 };
 
 // Put under maintenance a room
-export const maintenanceRoom = async (req, res) => {
+export const deleteRoom = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const updatedRoom = await Room.findByIdAndUpdate(
-      id,
-      { status: "under_maintenance" },
-      { new: true }
-    );
+    const updatedRoom = await Room.findByIdAndDelete(id);
     res.json({
       msg: "Room deactivated successfully.",
-      room: { id: updatedRoom._id, status: updatedRoom.status },
+      room: { updatedRoom },
     });
   } catch (error) {
     console.error(error);

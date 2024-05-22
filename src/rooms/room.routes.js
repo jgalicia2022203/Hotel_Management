@@ -14,7 +14,7 @@ import {
   editRoom,
   getRoomById,
   listRooms,
-  maintenanceRoom,
+  deleteRoom,
 } from "./room.controller.js";
 
 const router = Router();
@@ -76,8 +76,7 @@ router.put(
     check("room_number")
       .optional()
       .notEmpty()
-      .withMessage("the room number can't be empty")
-      .custom(roomExistsInHotel),
+      .withMessage("the room number can't be empty"),
     check("type").optional().notEmpty().withMessage("the type cannot be empty"),
     check("capacity")
       .optional()
@@ -87,27 +86,16 @@ router.put(
       .optional()
       .notEmpty()
       .withMessage("the price per night cannot be empty"),
-    check("hotel")
+    check("status")
       .optional()
       .notEmpty()
-      .withMessage("the hotel cannot be empty")
-      .custom(hotelExistsById),
-    check("amenities")
-      .optional()
-      .notEmpty()
-      .withMessage("the amenities can't be empty")
-      .custom(amenitiesExistsById),
-    check("images")
-      .optional()
-      .not()
-      .isEmpty()
-      .withMessage("the images can't be empty"),
+      .withMessage("the status cannot be empty"),
     validateFields,
   ],
   editRoom
 );
 
-router.patch(
+router.delete(
   "/:id",
   validateJWT,
   isAdmin,
@@ -116,7 +104,7 @@ router.patch(
     check("id").isMongoId().withMessage("Invalid ID format"),
     validateFields,
   ],
-  maintenanceRoom
+  deleteRoom
 );
 
 export default router;
